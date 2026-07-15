@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const lastUpdated = 'July 13, 2026';
+---
+
+<Layout title="Privacy" description="Privacy policy for thermoprops.com.">
+	<div class="mb-6">
+		<h1 class="font-display text-3xl font-semibold tracking-tight">Privacy</h1>
+		<p class="mt-2 text-sm text-text-muted">Last updated: {lastUpdated}</p>
+	</div>
+
+	<div class="flex max-w-2xl flex-col gap-6 text-text-muted">
+		<section class="flex flex-col gap-2">
+			<h2 class="font-display text-lg font-semibold text-text">What this site collects</h2>
+			<p>
+				Nothing, directly. There are no accounts, no forms that store personal data, and
+				no cookies set by thermoprops.com itself. Every property lookup and interpolation
+				runs entirely in your browser — inputs and results never leave your device or
+				reach a server we control.
+			</p>
+		</section>
+
+		<section class="flex flex-col gap-2">
+			<h2 class="font-display text-lg font-semibold text-text">Hosting</h2>
+			<p>
+				This site is served by Cloudflare Pages. Like any web host, Cloudflare may log
+				standard technical data — IP address, browser type, request timing — as part of
+				normal hosting and security operations. That logging is Cloudflare's, not ours;
+				see <a href="https://www.cloudflare.com/privacypolicy/" class="text-primary underline-offset-2 hover:underline" rel="noopener">Cloudflare's privacy policy</a> for what it covers.
+			</p>
+		</section>
+
+		<section class="flex flex-col gap-2">
+			<h2 class="font-display text-lg font-semibold text-text">Future analytics or advertising</h2>
+			<p>
+				This site does not currently use analytics or advertising of any kind. If that
+				changes, this policy will be updated first to disclose what's collected and how
+				it's used — not rewritten after the fact.
+			</p>
+		</section>
+
+		<section class="flex flex-col gap-2">
+			<h2 class="font-display text-lg font-semibold text-text">Questions</h2>
+			<p>
+				For privacy questions, use the <a href="/contact" class="text-primary underline-offset-2 hover:underline">Contact</a> page.
+			</p>
+		</section>
+	</div>
+</Layout>

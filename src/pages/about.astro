@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+	title="About"
+	description="What thermoprops.com is, and why it shows its work instead of just returning an answer."
+>
+	<div class="mb-6">
+		<h1 class="font-display text-3xl font-semibold tracking-tight">About</h1>
+	</div>
+
+	<div class="flex max-w-2xl flex-col gap-4 text-text-muted">
+		<p>
+			thermoprops.com is a fast, transparent property-interpolation reference for
+			engineering students working refrigeration, air-conditioning, and thermodynamics
+			problems. Look up a saturated, superheated, or two-phase R-134a state, or find a
+			state from a known property — every result shows the bracketing table rows and the
+			interpolation fraction used to compute it, not just the final number.
+		</p>
+		<p>
+			That's deliberate. Matching a value against a property table by hand — finding the
+			right rows, working out the fraction, interpolating — is a specific skill students
+			are expected to learn. Hiding those steps behind a single output number would make
+			the tool faster but less useful.
+		</p>
+		<p>
+			This is a lookup and interpolation aid, not a homework solver. It won't apply
+			compressor efficiencies, choose cycle assumptions, or make the judgment calls that
+			are part of the exercise — those stay with the student. What it removes is the
+			tedium and error risk of manual table lookup and linear interpolation, so more of
+			the effort goes toward the actual engineering.
+		</p>
+	</div>
+</Layout>

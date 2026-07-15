@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const faqs = [
+	{
+		question: 'What is R-134a, and why does it need property tables?',
+		answer: `R-134a is a hydrofluorocarbon refrigerant used in vapor-compression refrigeration
+			and air-conditioning cycles. Its thermodynamic properties — pressure, temperature,
+			specific volume, internal energy, enthalpy, entropy — don't reduce to a simple
+			formula you'd evaluate by hand, so they're measured and published as tables instead.
+			Property tables let you read or interpolate a state's properties directly from that
+			measured data rather than solving a real-gas equation of state.`,
+	},
+	{
+		question: "What's the difference between saturated, superheated, and two-phase states?",
+		answer: `A saturated state is where liquid and vapor can coexist at a given
+			temperature/pressure pair — the boiling point at that pressure. A two-phase
+			("wet") state is a mixture of saturated liquid and saturated vapor at that same
+			boiling point, distinguished by quality x, the vapor mass fraction. A superheated
+			state is vapor above the saturation temperature for its pressure, and its
+			properties depend on both pressure and temperature rather than on quality alone.`,
+	},
+	{
+		question: 'Why do I need to interpolate, and how does linear interpolation work?',
+		answer: `Tables only list values at fixed temperature or pressure increments, so a state
+			between two rows isn't printed directly. Linear interpolation estimates it by
+			assuming the property varies proportionally between the two bracketing rows: work
+			out how far your input sits between the lower and upper row as a fraction from 0
+			to 1, then apply that same fraction to the property you're after. It's an
+			approximation, but a good one as long as the table's increments are small relative
+			to how much the property curves.`,
+	},
+	{
+		question: 'What do the "Direct" and "Calculated" badges mean?',
+		answer: `"Direct" means the value was read straight from a table row — your input
+			matched a tabulated point exactly, so no interpolation was needed. "Calculated"
+			means the value came from interpolating between rows, or, for two-phase mixtures,
+			from combining saturated liquid and vapor properties with quality x — an estimate
+			rather than a value taken directly from the data.`,
+	},
+	{
+		question: "Is this a substitute for my textbook's tables?",
+		answer: `No — it's a faster way to use the same kind of reference data your textbook
+			provides, not a replacement for understanding it. Check your instructor's
+			requirements: many courses expect you to show your table lookups and interpolation
+			work by hand, and this tool is built to support that (it shows its bracketing rows
+			and interpolation fraction for exactly this reason), not to bypass it.`,
+	},
+	{
+		question: 'Will more refrigerants or property tables (steam, ammonia, etc.) be added?',
+		answer: `Possibly. R-134a's saturated, superheated, and two-phase tables are the
+			current scope. Steam, ammonia, and other refrigerants are natural extensions if
+			there's demand, but nothing beyond R-134a is built yet.`,
+	},
+];
+---
+
+<Layout title="FAQ" description="Frequently asked questions about thermoprops.com.">
+	<div class="mb-6">
+		<h1 class="font-display text-3xl font-semibold tracking-tight">FAQ</h1>
+	</div>
+
+	<div class="flex max-w-2xl flex-col gap-3">
+		{
+			faqs.map(({ question, answer }) => (
+				<details class="rounded-lg border border-border bg-surface shadow-sm">
+					<summary class="cursor-pointer select-none px-4 py-3 font-medium text-text transition-colors duration-150 ease-out hover:text-primary">
+						{question}
+					</summary>
+					<div class="border-t border-border px-4 py-4 text-text-muted">
+						<p>{answer}</p>
+					</div>
+				</details>
+			))
+		}
+	</div>
+</Layout>

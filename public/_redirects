@@ -1,0 +1,4 @@
+/r134a/saturated-temperature  /r134a/properties?tab=saturated   301
+/r134a/saturated-pressure     /r134a/properties?tab=saturated   301
+/r134a/superheated            /r134a/properties?tab=superheated 301
+/r134a/isentropic-compression /r134a/properties?tab=known       301

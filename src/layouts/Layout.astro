@@ -1,0 +1,63 @@
+---
+import ThemeToggle from '../components/ThemeToggle.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Interactive property tables and interpolation calculators for thermodynamics.' } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="alternate icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title} · thermoprops.com</title>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+			rel="stylesheet"
+		/>
+
+		<script is:inline>
+			(function () {
+				var stored = localStorage.getItem('theme');
+				var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+				var isDark = stored ? stored === 'dark' : prefersDark;
+				document.documentElement.classList.toggle('dark', isDark);
+			})();
+		</script>
+	</head>
+	<body class="min-h-screen font-sans antialiased">
+		<header class="border-b border-border bg-surface">
+			<div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-6">
+				<a href="/" class="font-display text-lg font-semibold tracking-tight text-primary">
+					thermoprops<span class="text-text-muted">.com</span>
+				</a>
+				<ThemeToggle />
+			</div>
+		</header>
+
+		<main class="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+			<slot />
+		</main>
+
+		<footer class="border-t border-border">
+			<div class="mx-auto flex max-w-5xl flex-wrap gap-x-6 gap-y-2 px-4 py-6 text-sm text-text-muted sm:px-6">
+				<a href="/about" class="transition-colors duration-150 ease-out hover:text-text">About</a>
+				<a href="/faq" class="transition-colors duration-150 ease-out hover:text-text">FAQ</a>
+				<a href="/privacy" class="transition-colors duration-150 ease-out hover:text-text">Privacy</a>
+				<a href="/contact" class="transition-colors duration-150 ease-out hover:text-text">Contact</a>
+			</div>
+		</footer>
+	</body>
+</html>

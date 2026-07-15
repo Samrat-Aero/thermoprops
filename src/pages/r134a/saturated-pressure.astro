@@ -1,0 +1,19 @@
+---
+const target = '/r134a/properties?tab=saturated';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Redirecting&hellip; &middot; thermoprops.com</title>
+		<link rel="canonical" href={target} />
+		<meta http-equiv="refresh" content={`0; url=${target}`} />
+		<meta name="robots" content="noindex" />
+	</head>
+	<body>
+		<p>This page has moved to <a href={target}>{target}</a>.</p>
+		<script define:vars={{ target }}>
+			window.location.replace(target);
+		</script>
+	</body>
+</html>

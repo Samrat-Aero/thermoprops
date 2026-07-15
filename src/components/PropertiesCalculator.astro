@@ -1,0 +1,814 @@
+---
+---
+
+<div class="overflow-hidden rounded-lg border border-border bg-surface shadow-sm">
+	<div class="flex flex-wrap gap-1 border-b border-border px-6 pt-4" role="tablist" aria-label="Property lookup mode">
+		<button
+			type="button"
+			role="tab"
+			id="tab-saturated"
+			aria-selected="true"
+			aria-controls="panel-saturated"
+			class="tab-button rounded-t-md border border-b-0 border-transparent px-4 py-2 text-sm font-medium text-text-muted transition-colors duration-150 ease-out hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+		>
+			Saturated
+		</button>
+		<button
+			type="button"
+			role="tab"
+			id="tab-superheated"
+			aria-selected="false"
+			aria-controls="panel-superheated"
+			tabindex="-1"
+			class="tab-button rounded-t-md border border-b-0 border-transparent px-4 py-2 text-sm font-medium text-text-muted transition-colors duration-150 ease-out hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+		>
+			Superheated
+		</button>
+		<button
+			type="button"
+			role="tab"
+			id="tab-twophase"
+			aria-selected="false"
+			aria-controls="panel-twophase"
+			tabindex="-1"
+			class="tab-button rounded-t-md border border-b-0 border-transparent px-4 py-2 text-sm font-medium text-text-muted transition-colors duration-150 ease-out hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+		>
+			Two-Phase Mixture
+		</button>
+		<button
+			type="button"
+			role="tab"
+			id="tab-known"
+			aria-selected="false"
+			aria-controls="panel-known"
+			tabindex="-1"
+			class="tab-button rounded-t-md border border-b-0 border-transparent px-4 py-2 text-sm font-medium text-text-muted transition-colors duration-150 ease-out hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+		>
+			Find State from Known Property
+		</button>
+	</div>
+
+	<!-- Saturated panel -->
+	<div id="panel-saturated" role="tabpanel" aria-labelledby="tab-saturated" class="px-6 py-6">
+		<form id="saturated-form" novalidate class="flex flex-col gap-4">
+			<fieldset class="flex items-center gap-4">
+				<legend class="mb-1 w-full text-sm font-medium">Lookup basis</legend>
+				<label class="flex items-center gap-2 text-sm">
+					<input type="radio" name="sat-basis" id="sat-basis-temp" value="temp" checked class="accent-primary" />
+					By Temperature
+				</label>
+				<label class="flex items-center gap-2 text-sm">
+					<input type="radio" name="sat-basis" id="sat-basis-pressure" value="pressure" class="accent-primary" />
+					By Pressure
+				</label>
+			</fieldset>
+			<div class="flex flex-col gap-4 sm:flex-row sm:items-end">
+				<div class="flex-1">
+					<label for="sat-value-input" id="sat-value-label" class="block text-sm font-medium">Temperature</label>
+					<div class="mt-1 flex items-center gap-2">
+						<input
+							id="sat-value-input"
+							name="value"
+							type="number"
+							inputmode="decimal"
+							step="any"
+							placeholder="e.g. 4.5…"
+							required
+							aria-describedby="sat-range-hint sat-error"
+							class="w-full rounded-md border border-border bg-bg px-3 py-2 font-mono text-base text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+						/>
+						<span id="sat-value-unit" class="font-mono text-sm text-text-muted">°C</span>
+					</div>
+					<p id="sat-range-hint" class="mt-1 text-xs text-text-muted">Valid range: -40°C to 100°C</p>
+				</div>
+				<button
+					type="submit"
+					class="rounded-md bg-primary px-5 py-2 font-medium text-primary-foreground transition-colors duration-150 ease-out hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+				>
+					Calculate
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<!-- Superheated panel -->
+	<div id="panel-superheated" role="tabpanel" aria-labelledby="tab-superheated" class="hidden px-6 py-6">
+		<form id="superheated-form" novalidate class="flex flex-col gap-4 sm:flex-row sm:items-end">
+			<div class="flex-1">
+				<label for="sh-pressure-input" class="block text-sm font-medium">Pressure</label>
+				<div class="mt-1 flex items-center gap-2">
+					<input
+						id="sh-pressure-input"
+						name="pressure"
+						type="number"
+						inputmode="decimal"
+						step="any"
+						min="0.06"
+						max="1.6"
+						placeholder="e.g. 0.32…"
+						required
+						aria-describedby="sh-pressure-range-hint sh-error"
+						class="w-full rounded-md border border-border bg-bg px-3 py-2 font-mono text-base text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+					/>
+					<span class="font-mono text-sm text-text-muted">MPa</span>
+				</div>
+				<p id="sh-pressure-range-hint" class="mt-1 text-xs text-text-muted">Valid range: 0.06 MPa to 1.6 MPa</p>
+			</div>
+			<div class="flex-1">
+				<label for="sh-temperature-input" class="block text-sm font-medium">Temperature</label>
+				<div class="mt-1 flex items-center gap-2">
+					<input
+						id="sh-temperature-input"
+						name="temperature"
+						type="number"
+						inputmode="decimal"
+						step="any"
+						placeholder="e.g. 50…"
+						required
+						aria-describedby="sh-temperature-range-hint sh-error"
+						class="w-full rounded-md border border-border bg-bg px-3 py-2 font-mono text-base text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+					/>
+					<span class="font-mono text-sm text-text-muted">&deg;C</span>
+				</div>
+				<p id="sh-temperature-range-hint" class="mt-1 text-xs text-text-muted">
+					Must be at or above the saturation temperature for the given P
+				</p>
+			</div>
+			<button
+				type="submit"
+				class="rounded-md bg-primary px-5 py-2 font-medium text-primary-foreground transition-colors duration-150 ease-out hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+			>
+				Calculate
+			</button>
+		</form>
+	</div>
+
+	<!-- Two-phase mixture panel -->
+	<div id="panel-twophase" role="tabpanel" aria-labelledby="tab-twophase" class="hidden px-6 py-6">
+		<form id="twophase-form" novalidate class="flex flex-col gap-4">
+			<fieldset class="flex items-center gap-4">
+				<legend class="mb-1 w-full text-sm font-medium">Lookup basis</legend>
+				<label class="flex items-center gap-2 text-sm">
+					<input type="radio" name="tp-basis" id="tp-basis-temp" value="temp" checked class="accent-primary" />
+					By Temperature
+				</label>
+				<label class="flex items-center gap-2 text-sm">
+					<input type="radio" name="tp-basis" id="tp-basis-pressure" value="pressure" class="accent-primary" />
+					By Pressure
+				</label>
+			</fieldset>
+			<div class="flex flex-col gap-4 sm:flex-row sm:items-end">
+				<div class="flex-1">
+					<label for="tp-value-input" id="tp-value-label" class="block text-sm font-medium">Temperature</label>
+					<div class="mt-1 flex items-center gap-2">
+						<input
+							id="tp-value-input"
+							name="value"
+							type="number"
+							inputmode="decimal"
+							step="any"
+							placeholder="e.g. 4.5…"
+							required
+							aria-describedby="tp-range-hint tp-error"
+							class="w-full rounded-md border border-border bg-bg px-3 py-2 font-mono text-base text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+						/>
+						<span id="tp-value-unit" class="font-mono text-sm text-text-muted">°C</span>
+					</div>
+					<p id="tp-range-hint" class="mt-1 text-xs text-text-muted">Valid range: -40°C to 100°C</p>
+				</div>
+				<div class="flex-1">
+					<label for="tp-quality-input" class="block text-sm font-medium">Quality, x</label>
+					<div class="mt-1 flex items-center gap-2">
+						<input
+							id="tp-quality-input"
+							name="quality"
+							type="number"
+							inputmode="decimal"
+							step="any"
+							min="0"
+							max="1"
+							placeholder="e.g. 0.4…"
+							required
+							aria-describedby="tp-quality-hint tp-error"
+							class="w-full rounded-md border border-border bg-bg px-3 py-2 font-mono text-base text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+						/>
+					</div>
+					<p id="tp-quality-hint" class="mt-1 text-xs text-text-muted">Valid range: 0 to 1</p>
+				</div>
+				<button
+					type="submit"
+					class="rounded-md bg-primary px-5 py-2 font-medium text-primary-foreground transition-colors duration-150 ease-out hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+				>
+					Calculate
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<!-- Find state from known property panel -->
+	<div id="panel-known" role="tabpanel" aria-labelledby="tab-known" class="hidden px-6 py-6">
+		<form id="known-form" novalidate class="flex flex-col gap-4 sm:flex-row sm:items-end">
+			<div class="flex-1">
+				<label for="kp-pressure-input" class="block text-sm font-medium">Pressure</label>
+				<div class="mt-1 flex items-center gap-2">
+					<input
+						id="kp-pressure-input"
+						name="pressure"
+						type="number"
+						inputmode="decimal"
+						step="any"
+						min="0.06"
+						max="1.6"
+						placeholder="e.g. 1.0171…"
+						required
+						aria-describedby="kp-pressure-range-hint kp-error"
+						class="w-full rounded-md border border-border bg-bg px-3 py-2 font-mono text-base text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+					/>
+					<span class="font-mono text-sm text-text-muted">MPa</span>
+				</div>
+				<p id="kp-pressure-range-hint" class="mt-1 text-xs text-text-muted">Valid range: 0.06 MPa to 1.6 MPa</p>
+			</div>
+			<div class="flex-1">
+				<label for="kp-property-select" class="block text-sm font-medium">Known property</label>
+				<select
+					id="kp-property-select"
+					name="property"
+					class="mt-1 w-full rounded-md border border-border bg-bg px-3 py-2 font-mono text-base text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+				>
+					<option value="s_kJkgK">s — entropy (kJ/kg&middot;K)</option>
+					<option value="h_kJkg">h — enthalpy (kJ/kg)</option>
+					<option value="u_kJkg">u — internal energy (kJ/kg)</option>
+					<option value="v_m3kg">v — specific volume (m&sup3;/kg)</option>
+				</select>
+			</div>
+			<div class="flex-1">
+				<label for="kp-value-input" class="block text-sm font-medium">Value</label>
+				<input
+					id="kp-value-input"
+					name="value"
+					type="number"
+					inputmode="decimal"
+					step="any"
+					placeholder="e.g. 0.93766…"
+					required
+					aria-describedby="kp-error"
+					class="mt-1 w-full rounded-md border border-border bg-bg px-3 py-2 font-mono text-base text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+				/>
+			</div>
+			<button
+				type="submit"
+				class="rounded-md bg-primary px-5 py-2 font-medium text-primary-foreground transition-colors duration-150 ease-out hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+			>
+				Calculate
+			</button>
+		</form>
+	</div>
+
+	<p
+		id="properties-error"
+		role="alert"
+		class="mx-6 mb-6 hidden rounded-md border border-danger/30 bg-danger-bg px-4 py-3 text-sm text-danger"
+	></p>
+
+	<div id="properties-results" class="hidden border-t border-border px-6 py-6" aria-live="polite">
+		<dl id="properties-results-grid" class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"></dl>
+
+		<details class="mt-6 rounded-md border border-border">
+			<summary
+				class="cursor-pointer select-none px-4 py-3 text-sm font-medium text-text-muted transition-colors duration-150 ease-out hover:text-text"
+			>
+				Bracketing table rows &amp; interpolation fraction
+			</summary>
+			<div class="border-t border-border px-4 py-4">
+				<p id="properties-fraction-note" class="mb-3 font-mono text-sm text-text-muted"></p>
+				<div class="overflow-x-auto">
+					<table class="w-full min-w-[420px] border-collapse text-sm">
+						<thead>
+							<tr id="properties-bracket-header-row" class="border-b border-border text-left">
+								<th class="sticky left-0 bg-surface py-2 pr-4 font-medium text-text-muted">Property</th>
+							</tr>
+						</thead>
+						<tbody id="properties-bracket-rows-body" class="font-mono"></tbody>
+					</table>
+				</div>
+			</div>
+		</details>
+	</div>
+</div>
+
+<script>
+	import {
+		linearInterpolate,
+		bilinearInterpolate,
+		inverseInterpolateByProperty,
+		type SatTempRow,
+		type SatPressureRow,
+		type SuperheatedBlock,
+	} from '../lib/interpolation';
+	import satTempDataRaw from '../data/r134a-sat-temp.json';
+	import satPressureDataRaw from '../data/r134a-sat-pressure.json';
+	import superheatedDataRaw from '../data/r134a-superheated.json';
+
+	const satTempTable = satTempDataRaw as SatTempRow[];
+	const satPressureTable = satPressureDataRaw as SatPressureRow[];
+	const superheatedTable = superheatedDataRaw as SuperheatedBlock[];
+
+	const TABLE_MIN_T = satTempTable[0].T_C;
+	const TABLE_MAX_T = satTempTable[satTempTable.length - 1].T_C;
+	const TABLE_MIN_P_SAT = satPressureTable[0].P_MPa;
+	const TABLE_MAX_P_SAT = satPressureTable[satPressureTable.length - 1].P_MPa;
+	const TABLE_MIN_P_SH = superheatedTable[0].P_MPa;
+	const TABLE_MAX_P_SH = superheatedTable[superheatedTable.length - 1].P_MPa;
+
+	type PropertyMeta = { label: string; unit: string; decimals: number };
+
+	const PROPERTY_META: Record<string, PropertyMeta> = {
+		T_C: { label: 'T', unit: '&deg;C', decimals: 2 },
+		P_MPa: { label: 'P', unit: 'MPa', decimals: 2 },
+		P_sat_MPa: { label: 'P<sub>sat</sub>', unit: 'MPa', decimals: 5 },
+		T_sat_C: { label: 'T<sub>sat</sub>', unit: '&deg;C', decimals: 2 },
+		vf_m3kg: { label: 'v<sub>f</sub>', unit: 'm&sup3;/kg', decimals: 7 },
+		vg_m3kg: { label: 'v<sub>g</sub>', unit: 'm&sup3;/kg', decimals: 5 },
+		uf_kJkg: { label: 'u<sub>f</sub>', unit: 'kJ/kg', decimals: 3 },
+		ug_kJkg: { label: 'u<sub>g</sub>', unit: 'kJ/kg', decimals: 2 },
+		hf_kJkg: { label: 'h<sub>f</sub>', unit: 'kJ/kg', decimals: 3 },
+		hfg_kJkg: { label: 'h<sub>fg</sub>', unit: 'kJ/kg', decimals: 2 },
+		hg_kJkg: { label: 'h<sub>g</sub>', unit: 'kJ/kg', decimals: 2 },
+		sf_kJkgK: { label: 's<sub>f</sub>', unit: 'kJ/kg&middot;K', decimals: 5 },
+		sg_kJkgK: { label: 's<sub>g</sub>', unit: 'kJ/kg&middot;K', decimals: 5 },
+		v_m3kg: { label: 'v', unit: 'm&sup3;/kg', decimals: 5 },
+		u_kJkg: { label: 'u', unit: 'kJ/kg', decimals: 2 },
+		h_kJkg: { label: 'h', unit: 'kJ/kg', decimals: 2 },
+		s_kJkgK: { label: 's', unit: 'kJ/kg&middot;K', decimals: 4 },
+		x: { label: 'x', unit: '&mdash;', decimals: 4 },
+	};
+
+	// --- Shared helpers (verified in the four standalone calculators) ---
+
+	function formatNumber(value: number, decimals: number): string {
+		return value.toFixed(decimals);
+	}
+
+	function badge(isDirect: boolean): string {
+		return isDirect
+			? '<span class="mt-1 inline-block rounded-full border border-border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-text-muted">Direct</span>'
+			: '<span class="mt-1 inline-block rounded-full border border-accent-border bg-accent-bg px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-accent">Calculated</span>';
+	}
+
+	function resultTile(key: string, value: number, isDirect: boolean): string {
+		const meta = PROPERTY_META[key];
+		return `
+			<div class="rounded-md border border-border bg-bg px-3 py-2">
+				<dt class="text-xs text-text-muted">${meta.label} <span class="text-[10px]">(${meta.unit})</span></dt>
+				<dd class="font-mono text-sm font-medium">${formatNumber(value, meta.decimals)}</dd>
+				${badge(isDirect)}
+			</div>
+		`;
+	}
+
+	interface BracketColumn {
+		header: string;
+		row: Record<string, number>;
+	}
+
+	function asRow(row: object): Record<string, number> {
+		return row as Record<string, number>;
+	}
+
+	function renderResultsGrid(tiles: string[]) {
+		resultsGrid.innerHTML = tiles.join('');
+	}
+
+	function renderBracketTable(columns: BracketColumn[], rowKeys: string[]) {
+		headerRow.innerHTML =
+			'<th class="sticky left-0 bg-surface py-2 pr-4 font-medium text-text-muted">Property</th>' +
+			columns
+				.map((col) => `<th class="py-2 pr-4 font-mono font-medium">${col.header}</th>`)
+				.join('');
+
+		bracketRowsBody.innerHTML = rowKeys
+			.map((key) => {
+				const meta = PROPERTY_META[key];
+				const cells = columns
+					.map((col) => `<td class="py-1.5 pr-4">${formatNumber(col.row[key], meta.decimals)}</td>`)
+					.join('');
+				return `
+					<tr class="border-b border-border/60 last:border-0">
+						<td class="sticky left-0 bg-surface py-1.5 pr-4 text-text-muted">${meta.label} <span class="text-[10px]">(${meta.unit})</span></td>
+						${cells}
+					</tr>
+				`;
+			})
+			.join('');
+	}
+
+	function showError(message: string) {
+		errorBox.textContent = message;
+		errorBox.classList.remove('hidden');
+		resultsBox.classList.add('hidden');
+	}
+
+	function clearError() {
+		errorBox.textContent = '';
+		errorBox.classList.add('hidden');
+	}
+
+	// --- Shared DOM refs ---
+
+	const errorBox = document.getElementById('properties-error') as HTMLElement;
+	const resultsBox = document.getElementById('properties-results') as HTMLElement;
+	const resultsGrid = document.getElementById('properties-results-grid') as HTMLElement;
+	const fractionNote = document.getElementById('properties-fraction-note') as HTMLElement;
+	const headerRow = document.getElementById('properties-bracket-header-row') as HTMLElement;
+	const bracketRowsBody = document.getElementById('properties-bracket-rows-body') as HTMLElement;
+
+	// --- Tabs ---
+
+	const tabs = [
+		{ tab: document.getElementById('tab-saturated')!, panel: document.getElementById('panel-saturated')! },
+		{ tab: document.getElementById('tab-superheated')!, panel: document.getElementById('panel-superheated')! },
+		{ tab: document.getElementById('tab-twophase')!, panel: document.getElementById('panel-twophase')! },
+		{ tab: document.getElementById('tab-known')!, panel: document.getElementById('panel-known')! },
+	];
+
+	function selectTab(index: number) {
+		tabs.forEach(({ tab, panel }, i) => {
+			const selected = i === index;
+			tab.setAttribute('aria-selected', String(selected));
+			tab.tabIndex = selected ? 0 : -1;
+			tab.classList.toggle('border-border', selected);
+			tab.classList.toggle('bg-surface', selected);
+			tab.classList.toggle('text-text', selected);
+			tab.classList.toggle('text-text-muted', !selected);
+			panel.classList.toggle('hidden', !selected);
+		});
+		clearError();
+		resultsBox.classList.add('hidden');
+	}
+
+	tabs.forEach(({ tab }, index) => {
+		tab.addEventListener('click', () => selectTab(index));
+		tab.addEventListener('keydown', (event) => {
+			if (event.key === 'ArrowRight') {
+				selectTab((index + 1) % tabs.length);
+				tabs[(index + 1) % tabs.length].tab.focus();
+			} else if (event.key === 'ArrowLeft') {
+				selectTab((index - 1 + tabs.length) % tabs.length);
+				tabs[(index - 1 + tabs.length) % tabs.length].tab.focus();
+			}
+		});
+	});
+
+	const TAB_PARAM_ORDER = ['saturated', 'superheated', 'twophase', 'known'] as const;
+
+	function initialTabIndexFromURL(): number {
+		const requested = new URLSearchParams(window.location.search).get('tab');
+		const index = TAB_PARAM_ORDER.findIndex((name) => name === requested);
+		return index === -1 ? 0 : index;
+	}
+
+	selectTab(initialTabIndexFromURL());
+
+	// --- Saturated tab ---
+
+	const SAT_TEMP_TARGET_KEYS = [
+		'P_sat_MPa',
+		'vf_m3kg',
+		'vg_m3kg',
+		'uf_kJkg',
+		'ug_kJkg',
+		'hf_kJkg',
+		'hfg_kJkg',
+		'hg_kJkg',
+		'sf_kJkgK',
+		'sg_kJkgK',
+	] as const;
+
+	const SAT_PRESSURE_TARGET_KEYS = [
+		'T_sat_C',
+		'vf_m3kg',
+		'vg_m3kg',
+		'uf_kJkg',
+		'ug_kJkg',
+		'hf_kJkg',
+		'hfg_kJkg',
+		'hg_kJkg',
+		'sf_kJkgK',
+		'sg_kJkgK',
+	] as const;
+
+	const satForm = document.getElementById('saturated-form') as HTMLFormElement;
+	const satBasisTemp = document.getElementById('sat-basis-temp') as HTMLInputElement;
+	const satValueInput = document.getElementById('sat-value-input') as HTMLInputElement;
+	const satValueLabel = document.getElementById('sat-value-label') as HTMLElement;
+	const satValueUnit = document.getElementById('sat-value-unit') as HTMLElement;
+	const satRangeHint = document.getElementById('sat-range-hint') as HTMLElement;
+
+	function updateSatBasisUI() {
+		if (satBasisTemp.checked) {
+			satValueLabel.textContent = 'Temperature';
+			satValueUnit.textContent = '°C';
+			satRangeHint.textContent = `Valid range: ${TABLE_MIN_T}°C to ${TABLE_MAX_T}°C`;
+		} else {
+			satValueLabel.textContent = 'Pressure';
+			satValueUnit.textContent = 'MPa';
+			satRangeHint.textContent = `Valid range: ${TABLE_MIN_P_SAT} MPa to ${TABLE_MAX_P_SAT} MPa`;
+		}
+	}
+
+	satForm.querySelectorAll('input[name="sat-basis"]').forEach((el) =>
+		el.addEventListener('change', updateSatBasisUI)
+	);
+	updateSatBasisUI();
+
+	satForm.addEventListener('submit', (event) => {
+		event.preventDefault();
+		clearError();
+
+		const raw = satValueInput.value.trim();
+		const value = Number(raw);
+		if (raw === '' || Number.isNaN(value)) {
+			showError('Enter a numeric value.');
+			return;
+		}
+
+		if (satBasisTemp.checked) {
+			if (value < TABLE_MIN_T || value > TABLE_MAX_T) {
+				showError(`Temperature must be between ${TABLE_MIN_T}°C and ${TABLE_MAX_T}°C (saturated temperature range).`);
+				return;
+			}
+			const result = linearInterpolate(satTempTable, value, 'T_C', SAT_TEMP_TARGET_KEYS);
+			const isExact = result.lowerRow === result.upperRow;
+
+			renderResultsGrid(SAT_TEMP_TARGET_KEYS.map((key) => resultTile(key, result.values[key], isExact)));
+
+			fractionNote.textContent = isExact
+				? `Exact match at T = ${result.lowerRow.T_C}°C — values read directly from the saturation reference data, no interpolation needed.`
+				: `Interpolation fraction = ${result.fraction.toFixed(4)} between T = ${result.lowerRow.T_C}°C and T = ${result.upperRow.T_C}°C.`;
+
+			renderBracketTable(
+				[
+					{ header: `T = ${result.lowerRow.T_C}°C`, row: asRow(result.lowerRow) },
+					{ header: `T = ${result.upperRow.T_C}°C`, row: asRow(result.upperRow) },
+				],
+				['T_C', ...SAT_TEMP_TARGET_KEYS]
+			);
+		} else {
+			if (value < TABLE_MIN_P_SAT || value > TABLE_MAX_P_SAT) {
+				showError(`Pressure must be between ${TABLE_MIN_P_SAT} MPa and ${TABLE_MAX_P_SAT} MPa (saturated pressure range).`);
+				return;
+			}
+			const result = linearInterpolate(satPressureTable, value, 'P_MPa', SAT_PRESSURE_TARGET_KEYS);
+			const isExact = result.lowerRow === result.upperRow;
+
+			renderResultsGrid(SAT_PRESSURE_TARGET_KEYS.map((key) => resultTile(key, result.values[key], isExact)));
+
+			fractionNote.textContent = isExact
+				? `Exact match at P = ${result.lowerRow.P_MPa} MPa — values read directly from the saturation reference data, no interpolation needed.`
+				: `Interpolation fraction = ${result.fraction.toFixed(4)} between P = ${result.lowerRow.P_MPa} MPa and P = ${result.upperRow.P_MPa} MPa.`;
+
+			renderBracketTable(
+				[
+					{ header: `P = ${result.lowerRow.P_MPa} MPa`, row: asRow(result.lowerRow) },
+					{ header: `P = ${result.upperRow.P_MPa} MPa`, row: asRow(result.upperRow) },
+				],
+				['P_MPa', ...SAT_PRESSURE_TARGET_KEYS]
+			);
+		}
+
+		resultsBox.classList.remove('hidden');
+	});
+
+	// --- Superheated tab ---
+
+	const SUPERHEATED_TARGET_KEYS = ['v_m3kg', 'u_kJkg', 'h_kJkg', 's_kJkgK'] as const;
+
+	const shForm = document.getElementById('superheated-form') as HTMLFormElement;
+	const shPressureInput = document.getElementById('sh-pressure-input') as HTMLInputElement;
+	const shTemperatureInput = document.getElementById('sh-temperature-input') as HTMLInputElement;
+
+	shForm.addEventListener('submit', (event) => {
+		event.preventDefault();
+		clearError();
+
+		const rawP = shPressureInput.value.trim();
+		const rawT = shTemperatureInput.value.trim();
+		const P = Number(rawP);
+		const T = Number(rawT);
+
+		if (rawP === '' || Number.isNaN(P) || rawT === '' || Number.isNaN(T)) {
+			showError('Enter a numeric pressure and temperature.');
+			return;
+		}
+
+		if (P < TABLE_MIN_P_SH || P > TABLE_MAX_P_SH) {
+			showError(`Pressure must be between ${TABLE_MIN_P_SH} MPa and ${TABLE_MAX_P_SH} MPa (superheated reference range).`);
+			return;
+		}
+
+		let result;
+		try {
+			result = bilinearInterpolate(superheatedTable, P, T);
+		} catch (error) {
+			if (error instanceof RangeError) {
+				showError("This state isn't covered by the tabulated superheated data.");
+				return;
+			}
+			throw error;
+		}
+
+		const isExact = result.pFraction === 0 && result.lowerP.fraction === 0 && result.upperP.fraction === 0;
+
+		renderResultsGrid(SUPERHEATED_TARGET_KEYS.map((key) => resultTile(key, result.values[key], isExact)));
+
+		fractionNote.textContent = isExact
+			? `Exact match at P = ${result.lowerP.block.P_MPa} MPa, T = ${result.lowerP.lowerRow.T_C}°C — values read directly from the superheated reference data, no interpolation needed.`
+			: `P fraction = ${result.pFraction.toFixed(4)} between P = ${result.lowerP.block.P_MPa} MPa and P = ${result.upperP.block.P_MPa} MPa. T fraction = ${result.lowerP.fraction.toFixed(4)} at the lower P column, ${result.upperP.fraction.toFixed(4)} at the upper P column.`;
+
+		renderBracketTable(
+			[
+				{ header: `P=${result.lowerP.block.P_MPa} MPa<br />T=${result.lowerP.lowerRow.T_C}&deg;C`, row: asRow(result.lowerP.lowerRow) },
+				{ header: `P=${result.lowerP.block.P_MPa} MPa<br />T=${result.lowerP.upperRow.T_C}&deg;C`, row: asRow(result.lowerP.upperRow) },
+				{ header: `P=${result.upperP.block.P_MPa} MPa<br />T=${result.upperP.lowerRow.T_C}&deg;C`, row: asRow(result.upperP.lowerRow) },
+				{ header: `P=${result.upperP.block.P_MPa} MPa<br />T=${result.upperP.upperRow.T_C}&deg;C`, row: asRow(result.upperP.upperRow) },
+			],
+			[...SUPERHEATED_TARGET_KEYS]
+		);
+
+		resultsBox.classList.remove('hidden');
+	});
+
+	// --- Two-phase mixture tab ---
+
+	const tpForm = document.getElementById('twophase-form') as HTMLFormElement;
+	const tpBasisTemp = document.getElementById('tp-basis-temp') as HTMLInputElement;
+	const tpValueInput = document.getElementById('tp-value-input') as HTMLInputElement;
+	const tpQualityInput = document.getElementById('tp-quality-input') as HTMLInputElement;
+	const tpValueLabel = document.getElementById('tp-value-label') as HTMLElement;
+	const tpValueUnit = document.getElementById('tp-value-unit') as HTMLElement;
+	const tpRangeHint = document.getElementById('tp-range-hint') as HTMLElement;
+
+	function updateTpBasisUI() {
+		if (tpBasisTemp.checked) {
+			tpValueLabel.textContent = 'Temperature';
+			tpValueUnit.textContent = '°C';
+			tpRangeHint.textContent = `Valid range: ${TABLE_MIN_T}°C to ${TABLE_MAX_T}°C`;
+		} else {
+			tpValueLabel.textContent = 'Pressure';
+			tpValueUnit.textContent = 'MPa';
+			tpRangeHint.textContent = `Valid range: ${TABLE_MIN_P_SAT} MPa to ${TABLE_MAX_P_SAT} MPa`;
+		}
+	}
+
+	tpForm.querySelectorAll('input[name="tp-basis"]').forEach((el) => el.addEventListener('change', updateTpBasisUI));
+	updateTpBasisUI();
+
+	tpForm.addEventListener('submit', (event) => {
+		event.preventDefault();
+		clearError();
+
+		const rawValue = tpValueInput.value.trim();
+		const rawQuality = tpQualityInput.value.trim();
+		const value = Number(rawValue);
+		const x = Number(rawQuality);
+
+		if (rawValue === '' || Number.isNaN(value) || rawQuality === '' || Number.isNaN(x)) {
+			showError('Enter a numeric temperature/pressure and quality.');
+			return;
+		}
+		if (x < 0 || x > 1) {
+			showError('Quality x must be between 0 and 1.');
+			return;
+		}
+
+		type SatKeys = 'vf_m3kg' | 'vg_m3kg' | 'uf_kJkg' | 'ug_kJkg' | 'hf_kJkg' | 'hfg_kJkg' | 'sf_kJkgK' | 'sg_kJkgK';
+		const SAT_KEYS: readonly SatKeys[] = [
+			'vf_m3kg',
+			'vg_m3kg',
+			'uf_kJkg',
+			'ug_kJkg',
+			'hf_kJkg',
+			'hfg_kJkg',
+			'sf_kJkgK',
+			'sg_kJkgK',
+		];
+
+		let satHeader: string;
+		let isSatExact: boolean;
+		let vf: number, vg: number, uf: number, ug: number, hf: number, hfg: number, sf: number, sg: number;
+		let bracketColumns: BracketColumn[];
+
+		if (tpBasisTemp.checked) {
+			if (value < TABLE_MIN_T || value > TABLE_MAX_T) {
+				showError(`Temperature must be between ${TABLE_MIN_T}°C and ${TABLE_MAX_T}°C (saturated temperature range).`);
+				return;
+			}
+			const result = linearInterpolate(satTempTable, value, 'T_C', SAT_KEYS);
+			isSatExact = result.lowerRow === result.upperRow;
+			({ vf_m3kg: vf, vg_m3kg: vg, uf_kJkg: uf, ug_kJkg: ug, hf_kJkg: hf, hfg_kJkg: hfg, sf_kJkgK: sf, sg_kJkgK: sg } = result.values);
+			satHeader = isSatExact
+				? `Exact match at T = ${result.lowerRow.T_C}°C — values read directly from the saturation reference data, no interpolation needed.`
+				: `Saturation interpolation fraction = ${result.fraction.toFixed(4)} between T = ${result.lowerRow.T_C}°C and T = ${result.upperRow.T_C}°C.`;
+			bracketColumns = [
+				{ header: `T = ${result.lowerRow.T_C}°C`, row: asRow(result.lowerRow) },
+				{ header: `T = ${result.upperRow.T_C}°C`, row: asRow(result.upperRow) },
+			];
+		} else {
+			if (value < TABLE_MIN_P_SAT || value > TABLE_MAX_P_SAT) {
+				showError(`Pressure must be between ${TABLE_MIN_P_SAT} MPa and ${TABLE_MAX_P_SAT} MPa (saturated pressure range).`);
+				return;
+			}
+			const result = linearInterpolate(satPressureTable, value, 'P_MPa', SAT_KEYS);
+			isSatExact = result.lowerRow === result.upperRow;
+			({ vf_m3kg: vf, vg_m3kg: vg, uf_kJkg: uf, ug_kJkg: ug, hf_kJkg: hf, hfg_kJkg: hfg, sf_kJkgK: sf, sg_kJkgK: sg } = result.values);
+			satHeader = isSatExact
+				? `Exact match at P = ${result.lowerRow.P_MPa} MPa — values read directly from the saturation reference data, no interpolation needed.`
+				: `Saturation interpolation fraction = ${result.fraction.toFixed(4)} between P = ${result.lowerRow.P_MPa} MPa and P = ${result.upperRow.P_MPa} MPa.`;
+			bracketColumns = [
+				{ header: `P = ${result.lowerRow.P_MPa} MPa`, row: asRow(result.lowerRow) },
+				{ header: `P = ${result.upperRow.P_MPa} MPa`, row: asRow(result.upperRow) },
+			];
+		}
+
+		const v = vf + x * (vg - vf);
+		const u = uf + x * (ug - uf);
+		const h = hf + x * hfg;
+		const s = sf + x * (sg - sf);
+
+		resultsGrid.innerHTML = [
+			resultTile('x', x, false),
+			resultTile('v_m3kg', v, false),
+			resultTile('u_kJkg', u, false),
+			resultTile('h_kJkg', h, false),
+			resultTile('s_kJkgK', s, false),
+		].join('');
+
+		fractionNote.textContent = `${satHeader} Mixture properties computed at quality x = ${x.toFixed(4)} (always shown as Calculated).`;
+
+		renderBracketTable(bracketColumns, ['vf_m3kg', 'vg_m3kg', 'uf_kJkg', 'ug_kJkg', 'hf_kJkg', 'hfg_kJkg', 'sf_kJkgK', 'sg_kJkgK']);
+
+		resultsBox.classList.remove('hidden');
+	});
+
+	// --- Find state from known property tab ---
+
+	const kpForm = document.getElementById('known-form') as HTMLFormElement;
+	const kpPressureInput = document.getElementById('kp-pressure-input') as HTMLInputElement;
+	const kpPropertySelect = document.getElementById('kp-property-select') as HTMLSelectElement;
+	const kpValueInput = document.getElementById('kp-value-input') as HTMLInputElement;
+
+	const KP_TARGET_KEYS = ['T_C', 'v_m3kg', 'u_kJkg', 'h_kJkg', 's_kJkgK'] as const;
+
+	kpForm.addEventListener('submit', (event) => {
+		event.preventDefault();
+		clearError();
+
+		const rawP = kpPressureInput.value.trim();
+		const rawValue = kpValueInput.value.trim();
+		const P = Number(rawP);
+		const knownValue = Number(rawValue);
+		const knownKey = kpPropertySelect.value as (typeof KP_TARGET_KEYS)[number];
+
+		if (rawP === '' || Number.isNaN(P) || rawValue === '' || Number.isNaN(knownValue)) {
+			showError('Enter a numeric pressure and property value.');
+			return;
+		}
+
+		if (P < TABLE_MIN_P_SH || P > TABLE_MAX_P_SH) {
+			showError(`Pressure must be between ${TABLE_MIN_P_SH} MPa and ${TABLE_MAX_P_SH} MPa (superheated reference range).`);
+			return;
+		}
+
+		let result;
+		try {
+			result = inverseInterpolateByProperty(superheatedTable, P, knownKey, knownValue, KP_TARGET_KEYS);
+		} catch (error) {
+			if (error instanceof RangeError) {
+				showError("This state isn't covered by the tabulated superheated data.");
+				return;
+			}
+			throw error;
+		}
+
+		const isExact = result.pFraction === 0 && result.lowerP.fraction === 0 && result.upperP.fraction === 0;
+
+		renderResultsGrid(KP_TARGET_KEYS.map((key) => resultTile(key, result.values[key], isExact)));
+
+		const knownMeta = PROPERTY_META[knownKey];
+		fractionNote.textContent = isExact
+			? `Exact match at P = ${result.lowerP.block.P_MPa} MPa — values read directly from the superheated reference data, no interpolation needed.`
+			: `P fraction = ${result.pFraction.toFixed(4)} between P = ${result.lowerP.block.P_MPa} MPa and P = ${result.upperP.block.P_MPa} MPa. ${knownMeta.label} fraction = ${result.lowerP.fraction.toFixed(4)} at the lower P column, ${result.upperP.fraction.toFixed(4)} at the upper P column (target ${knownMeta.label} = ${formatNumber(knownValue, knownMeta.decimals)} ${knownMeta.unit.replace(/&middot;/g, '·').replace(/&deg;/g, '°').replace(/&sup3;/g, '³')}).`;
+
+		renderBracketTable(
+			[
+				{ header: `P=${result.lowerP.block.P_MPa} MPa<br />${knownMeta.label}=${formatNumber(result.lowerP.lowerRow[knownKey], knownMeta.decimals)}`, row: asRow(result.lowerP.lowerRow) },
+				{ header: `P=${result.lowerP.block.P_MPa} MPa<br />${knownMeta.label}=${formatNumber(result.lowerP.upperRow[knownKey], knownMeta.decimals)}`, row: asRow(result.lowerP.upperRow) },
+				{ header: `P=${result.upperP.block.P_MPa} MPa<br />${knownMeta.label}=${formatNumber(result.upperP.lowerRow[knownKey], knownMeta.decimals)}`, row: asRow(result.upperP.lowerRow) },
+				{ header: `P=${result.upperP.block.P_MPa} MPa<br />${knownMeta.label}=${formatNumber(result.upperP.upperRow[knownKey], knownMeta.decimals)}`, row: asRow(result.upperP.upperRow) },
+			],
+			[...KP_TARGET_KEYS]
+		);
+
+		resultsBox.classList.remove('hidden');
+	});
+</script>

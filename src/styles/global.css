@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+/* Runtime-switchable design tokens (light default, .dark override). Mapped
+   into Tailwind's theme below via @theme inline so utilities like bg-bg,
+   text-text, border-border, etc. track the active mode. */
+:root {
+  --color-bg: #f7f9f8;
+  --color-surface: #ffffff;
+  --color-surface-alt: #eef2f1;
+  --color-border: #d9e2e0;
+  --color-text: #0f2422;
+  --color-text-muted: #4c605d;
+  --color-primary: #0f5c5c;
+  --color-primary-hover: #0c4a4a;
+  --color-primary-foreground: #ffffff;
+  --color-accent: #b45309;
+  --color-accent-bg: #fef3e2;
+  --color-accent-border: #f3d9a8;
+  --color-danger: #b91c1c;
+  --color-danger-bg: #fef2f2;
+}
+
+.dark {
+  --color-bg: #0b1220;
+  --color-surface: #131c2e;
+  --color-surface-alt: #1a2338;
+  --color-border: #2a3550;
+  --color-text: #e8edf4;
+  --color-text-muted: #93a2ba;
+  --color-primary: #2dd4bf;
+  --color-primary-hover: #5eead4;
+  --color-primary-foreground: #062521;
+  --color-accent: #f59e0b;
+  --color-accent-bg: #2e2408;
+  --color-accent-border: #5c4614;
+  --color-danger: #f87171;
+  --color-danger-bg: #2c1414;
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-alt: var(--color-surface-alt);
+  --color-border: var(--color-border);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-accent: var(--color-accent);
+  --color-accent-bg: var(--color-accent-bg);
+  --color-accent-border: var(--color-accent-border);
+  --color-danger: var(--color-danger);
+  --color-danger-bg: var(--color-danger-bg);
+}
+
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+* {
+  border-color: var(--color-border);
+}

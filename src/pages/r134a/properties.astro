@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PropertiesCalculator from '../../components/PropertiesCalculator.astro';
+---
+
+<Layout
+	title="R-134a Property Finder"
+	description="Look up saturated, superheated, and two-phase R-134a properties, or find a state from a known property, with full interpolation detail."
+>
+	<div class="mb-6">
+		<h1 class="font-display text-3xl font-semibold tracking-tight">R-134a Property Finder</h1>
+		<p class="mt-2 max-w-2xl text-text-muted">
+			Choose a lookup mode: saturated properties by temperature or pressure, superheated
+			properties by pressure and temperature, two-phase mixture properties from quality, or
+			find a superheated state from a known property (h, s, u, or v). Values not present in
+			the table are found by linear interpolation between the nearest rows.
+		</p>
+	</div>
+
+	<PropertiesCalculator />
+</Layout>

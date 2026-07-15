@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+	title="R-134a Property Reference"
+	description="Interactive R-134a property reference and interpolation tool for engineering students, covering saturated, superheated, and two-phase states."
+>
+	<div class="flex flex-col items-start gap-6 py-12">
+		<h1 class="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+			thermoprops<span class="text-text-muted">.com</span>
+		</h1>
+		<p class="max-w-2xl text-lg text-text-muted">
+			An interactive R-134a property reference and interpolation tool for engineering
+			students. Look up saturated, superheated, and two-phase states, or find a state
+			from a known property — every result shows the bracketing rows and interpolation
+			fraction used to compute it, with values cross-verified against standard
+			thermodynamic references.
+		</p>
+		<a
+			href="/r134a/properties"
+			class="rounded-md bg-primary px-6 py-3 text-base font-medium text-primary-foreground transition-colors duration-150 ease-out hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+		>
+			Open the Property Finder
+		</a>
+	</div>
+</Layout>
