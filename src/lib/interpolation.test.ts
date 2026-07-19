@@ -7,8 +7,8 @@ import {
   type SatTempRow,
   type SuperheatedBlock,
 } from './interpolation';
-import satTempData from '../data/r134a-sat-temp.json';
-import superheatedData from '../data/r134a-superheated.json';
+import satTempData from '../data/r134a/sat-temp.json';
+import superheatedData from '../data/r134a/superheated.json';
 
 const satTempTable = satTempData as SatTempRow[];
 const superheatedTable = superheatedData as SuperheatedBlock[];

@@ -1,0 +1,13 @@
+{
+	"id": "r134a",
+	"displayName": "R-134a",
+	"units": {
+		"temperature": "°C",
+		"pressure": "MPa",
+		"specificVolume": "m³/kg",
+		"energy": "kJ/kg",
+		"entropy": "kJ/(kg·K)"
+	},
+	"referenceState": "Reference state: h = 0 kJ/kg and s = 0 kJ/(kg·K) for saturated liquid at -40°C",
+	"sourceNote": "Extracted from standard thermodynamics textbook appendix tables; cross-verified against NIST WebBook"
+}

@@ -1,4 +1,21 @@
 ---
+import type { SatTempRow, SatPressureRow, SuperheatedBlock } from '../lib/interpolation';
+
+interface Props {
+	fluidId: string;
+	satTempData: SatTempRow[];
+	satPressureData: SatPressureRow[];
+	superheatedData: SuperheatedBlock[];
+}
+
+const { fluidId, satTempData, satPressureData, superheatedData } = Astro.props;
+
+const TABLE_MIN_T = satTempData[0].T_C;
+const TABLE_MAX_T = satTempData[satTempData.length - 1].T_C;
+const TABLE_MIN_P_SAT = satPressureData[0].P_MPa;
+const TABLE_MAX_P_SAT = satPressureData[satPressureData.length - 1].P_MPa;
+const TABLE_MIN_P_SH = superheatedData[0].P_MPa;
+const TABLE_MAX_P_SH = superheatedData[superheatedData.length - 1].P_MPa;
 ---
 
 <div class="overflow-hidden rounded-lg border border-border bg-surface shadow-sm">
@@ -79,7 +96,7 @@
 						/>
 						<span id="sat-value-unit" class="font-mono text-sm text-text-muted">°C</span>
 					</div>
-					<p id="sat-range-hint" class="mt-1 text-xs text-text-muted">Valid range: -40°C to 100°C</p>
+					<p id="sat-range-hint" class="mt-1 text-xs text-text-muted">Valid range: {TABLE_MIN_T}°C to {TABLE_MAX_T}°C</p>
 				</div>
 				<button
 					type="submit"
@@ -103,8 +120,8 @@
 						type="number"
 						inputmode="decimal"
 						step="any"
-						min="0.06"
-						max="1.6"
+						min={TABLE_MIN_P_SH}
+						max={TABLE_MAX_P_SH}
 						placeholder="e.g. 0.32…"
 						required
 						aria-describedby="sh-pressure-range-hint sh-error"
@@ -112,7 +129,7 @@
 					/>
 					<span class="font-mono text-sm text-text-muted">MPa</span>
 				</div>
-				<p id="sh-pressure-range-hint" class="mt-1 text-xs text-text-muted">Valid range: 0.06 MPa to 1.6 MPa</p>
+				<p id="sh-pressure-range-hint" class="mt-1 text-xs text-text-muted">Valid range: {TABLE_MIN_P_SH} MPa to {TABLE_MAX_P_SH} MPa</p>
 			</div>
 			<div class="flex-1">
 				<label for="sh-temperature-input" class="block text-sm font-medium">Temperature</label>
@@ -174,7 +191,7 @@
 						/>
 						<span id="tp-value-unit" class="font-mono text-sm text-text-muted">°C</span>
 					</div>
-					<p id="tp-range-hint" class="mt-1 text-xs text-text-muted">Valid range: -40°C to 100°C</p>
+					<p id="tp-range-hint" class="mt-1 text-xs text-text-muted">Valid range: {TABLE_MIN_T}°C to {TABLE_MAX_T}°C</p>
 				</div>
 				<div class="flex-1">
 					<label for="tp-quality-input" class="block text-sm font-medium">Quality, x</label>
@@ -217,8 +234,8 @@
 						type="number"
 						inputmode="decimal"
 						step="any"
-						min="0.06"
-						max="1.6"
+						min={TABLE_MIN_P_SH}
+						max={TABLE_MAX_P_SH}
 						placeholder="e.g. 1.0171…"
 						required
 						aria-describedby="kp-pressure-range-hint kp-error"
@@ -226,7 +243,7 @@
 					/>
 					<span class="font-mono text-sm text-text-muted">MPa</span>
 				</div>
-				<p id="kp-pressure-range-hint" class="mt-1 text-xs text-text-muted">Valid range: 0.06 MPa to 1.6 MPa</p>
+				<p id="kp-pressure-range-hint" class="mt-1 text-xs text-text-muted">Valid range: {TABLE_MIN_P_SH} MPa to {TABLE_MAX_P_SH} MPa</p>
 			</div>
 			<div class="flex-1">
 				<label for="kp-property-select" class="block text-sm font-medium">Known property</label>
@@ -297,6 +314,13 @@
 	</div>
 </div>
 
+<script
+	type="application/json"
+	id="properties-data"
+	is:inline
+	set:html={JSON.stringify({ satTemp: satTempData, satPressure: satPressureData, superheated: superheatedData })}
+></script>
+
 <script>
 	import {
 		linearInterpolate,
@@ -306,13 +330,17 @@
 		type SatPressureRow,
 		type SuperheatedBlock,
 	} from '../lib/interpolation';
-	import satTempDataRaw from '../data/r134a-sat-temp.json';
-	import satPressureDataRaw from '../data/r134a-sat-pressure.json';
-	import superheatedDataRaw from '../data/r134a-superheated.json';
 
-	const satTempTable = satTempDataRaw as SatTempRow[];
-	const satPressureTable = satPressureDataRaw as SatPressureRow[];
-	const superheatedTable = superheatedDataRaw as SuperheatedBlock[];
+	const dataIsland = document.getElementById('properties-data') as HTMLScriptElement;
+	const fluidData = JSON.parse(dataIsland.textContent!) as {
+		satTemp: SatTempRow[];
+		satPressure: SatPressureRow[];
+		superheated: SuperheatedBlock[];
+	};
+
+	const satTempTable = fluidData.satTemp;
+	const satPressureTable = fluidData.satPressure;
+	const superheatedTable = fluidData.superheated;
 
 	const TABLE_MIN_T = satTempTable[0].T_C;
 	const TABLE_MAX_T = satTempTable[satTempTable.length - 1].T_C;

@@ -1,6 +1,14 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import PropertiesCalculator from '../../components/PropertiesCalculator.astro';
+import type { SatTempRow, SatPressureRow, SuperheatedBlock } from '../../lib/interpolation';
+import satTempDataRaw from '../../data/r134a/sat-temp.json';
+import satPressureDataRaw from '../../data/r134a/sat-pressure.json';
+import superheatedDataRaw from '../../data/r134a/superheated.json';
+
+const satTempData = satTempDataRaw as SatTempRow[];
+const satPressureData = satPressureDataRaw as SatPressureRow[];
+const superheatedData = superheatedDataRaw as SuperheatedBlock[];
 ---
 
 <Layout
@@ -17,5 +25,10 @@ import PropertiesCalculator from '../../components/PropertiesCalculator.astro';
 		</p>
 	</div>
 
-	<PropertiesCalculator />
+	<PropertiesCalculator
+		fluidId="r134a"
+		satTempData={satTempData}
+		satPressureData={satPressureData}
+		superheatedData={superheatedData}
+	/>
 </Layout>
