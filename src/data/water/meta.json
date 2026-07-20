@@ -9,5 +9,21 @@
 		"entropy": "kJ/(kg·K)"
 	},
 	"referenceState": "Reference state: uf = 0 kJ/kg and sf = 0 kJ/(kg·K) for saturated liquid at the triple point (T = 0.01°C, P = 0.0006117 MPa) — confirmed directly from the first row of the extracted saturated-temperature data, not assumed by analogy to other fluids. Note hf at this state is 0.001 kJ/kg, not exactly 0, because h = u + Pv and the Pv term is nonzero (though tiny) at the triple point.",
-	"sourceNote": "Extracted from standard thermodynamics textbook appendix tables (Saturated water — Temperature and Pressure tables); cross-verified against published IAPWS-IF97-traceable steam table references (8 points spanning low/mid/high/critical range; largest deviation ~0.03%). Not verified against NIST WebBook's interactive fluid property calculator — that tool requires form/session state and could not be reached via a plain fetch, so it was not used as a source."
+	"sourceNote": "Extracted from standard thermodynamics textbook appendix tables (Saturated water — Temperature and Pressure tables, Superheated water, Compressed liquid water); cross-verified against published IAPWS-IF97-traceable steam table references (8 saturated-table points spanning low/mid/high/critical range; largest deviation ~0.03%) and internal boundary consistency (superheated/compressed-liquid Sat. rows vs. the saturated-pressure table's vg/hg/sg and vf/hf/sf; deviations under 0.02% for v, under 0.1 kJ/kg for h, effectively 0 for s). Not verified against NIST WebBook's interactive fluid property calculator — that tool requires form/session state and could not be reached via a plain fetch, so it was not used as a source.",
+	"tables": {
+		"satTemp": { "range": "T = 0.01°C to 373.95°C (critical point)", "rows": 76 },
+		"satPressure": { "range": "P = 0.001 MPa to 22.064 MPa (critical point)", "rows": 73 },
+		"superheated": {
+			"range": "P = 0.01 MPa to 60 MPa, T = saturation to 1300°C",
+			"schema": "P x T grid (SuperheatedBlock[]) — same shape as R-134a's superheated.json: { P_MPa, T_sat_C, rows: [{ T_C, v_m3kg, u_kJkg, h_kJkg, s_kJkgK }] }",
+			"blocks": 36,
+			"note": "For P >= 25 MPa (above the 22.064 MPa critical pressure) there is no saturation state, so the source table has no Sat. row at those pressures. T_sat_C is set to the critical temperature (373.95°C) as a documented sentinel for those blocks — it is not a physically meaningful saturation temperature there. This field is not read by the current interpolation/UI code (only P_MPa and each row's T_C are used), so the sentinel has no functional effect; it exists only so the field is never a lie by omission."
+		},
+		"compressedLiquid": {
+			"range": "P = 5, 10, 15, 20, 30, 50 MPa, T = 0°C to saturation (or up to 380°C for the two supercritical pressures)",
+			"schema": "Same P x T grid shape as superheated.json (SuperheatedBlock[]), reusing the existing bilinear interpolation logic — new table TYPE for water (R-134a has no compressed-liquid data), not a new schema shape.",
+			"blocks": 6,
+			"note": "P = 30 and 50 MPa are above the critical pressure and correctly have no Sat. row (no liquid-vapor transition exists up there). Where a Sat. row does exist (P = 5/10/15/20 MPa), it is the highest-T row in that block, not the first printed row in the source table — the source lists Sat. first, then T = 0°C, 20°C, ... ascending. The JSON preserves the source's printed order (Sat. first) for fidelity; consumers sorting by T_C will find it last."
+		}
+	}
 }
