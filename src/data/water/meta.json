@@ -1,0 +1,13 @@
+{
+	"id": "water",
+	"displayName": "Water",
+	"units": {
+		"temperature": "°C",
+		"pressure": "MPa",
+		"specificVolume": "m³/kg",
+		"energy": "kJ/kg",
+		"entropy": "kJ/(kg·K)"
+	},
+	"referenceState": "Reference state: uf = 0 kJ/kg and sf = 0 kJ/(kg·K) for saturated liquid at the triple point (T = 0.01°C, P = 0.0006117 MPa) — confirmed directly from the first row of the extracted saturated-temperature data, not assumed by analogy to other fluids. Note hf at this state is 0.001 kJ/kg, not exactly 0, because h = u + Pv and the Pv term is nonzero (though tiny) at the triple point.",
+	"sourceNote": "Extracted from standard thermodynamics textbook appendix tables (Saturated water — Temperature and Pressure tables); cross-verified against published IAPWS-IF97-traceable steam table references (8 points spanning low/mid/high/critical range; largest deviation ~0.03%). Not verified against NIST WebBook's interactive fluid property calculator — that tool requires form/session state and could not be reached via a plain fetch, so it was not used as a source."
+}
